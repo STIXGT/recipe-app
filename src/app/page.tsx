@@ -1,9 +1,11 @@
-import TestApp from "./components/TestApp";
+import RecipeComponent from "./components/RecipeComponent";
+import UserComponent from "./components/UserComponent";
 
 export default function Home() {
   return (
-    <>
-      <TestApp />
-    </>
+    <div className="flex justify-center">
+      <UserComponent />
+      <RecipeComponent />
+    </div>
   );
 }

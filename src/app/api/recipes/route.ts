@@ -4,12 +4,14 @@ import { OkPacket } from "mysql2";
 
 export async function GET() {
   try {
-    const users = await query({
-      query: "SELECT * FROM User",
+    const recipes = await query({
+      query:
+        "SELECT Recipe.*, User.name AS user_name FROM Recipe JOIN User ON Recipe.userId = User.id",
       values: [],
     });
-    return Response.json(users);
+    return Response.json({ recipes });
   } catch (error) {
+    console.error("Error al ejecutar la consulta:", error);
     const errorMessage =
       error instanceof Error ? error.message : "Error al ejecutar la consulta";
     return Response.json({ error: errorMessage }, { status: 500 });
@@ -18,16 +20,18 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const { name, email } = await request.json();
+    const { title, description, userId } = await request.json();
 
+    console.log(title, description, userId);
     const result = await query({
-      query: "INSERT INTO User (name, email) VALUES (?, ?)",
-      values: [name, email],
+      query: "INSERT INTO Recipe (title, description, userId) VALUES (?, ?, ?)",
+      values: [title, description, userId],
     });
     return Response.json({
-      message: "Usuario creado exitosamente",
-      name,
-      email,
+      message: "Receta creada exitosamente",
+      title,
+      description,
+      userId,
       Id: (result as OkPacket).insertId,
     });
   } catch (error) {
